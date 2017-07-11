@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ApplicationManager.Model;
 
 namespace ApplicationManager
 {
@@ -43,19 +44,16 @@ namespace ApplicationManager
                 cfg.AddPolicy("isSuperUser", p => p.RequireClaim("isSuperUser", "true"));
             });
 
-            services.AddAuthorization(cfg =>
-            {
-                cfg.AddPolicy("isSuperUser", p => p.RequireClaim("isSuperUser", "true"));
-            });
-
-            services.AddMvc();
+     
 
             // Add framework services.
             services.AddMvc();
+            services.Configure<AppConfiguration>(Configuration.GetSection("AppConfiguration"));
+            services.AddTransient<IdentitySetup>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IdentitySetup identitySetup)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -66,6 +64,7 @@ namespace ApplicationManager
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
                     HotModuleReplacement = true
                 });
+                identitySetup.Setup().Wait();
             }
             else
             {
