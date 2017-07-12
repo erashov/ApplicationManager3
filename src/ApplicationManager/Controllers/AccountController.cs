@@ -46,7 +46,7 @@ namespace ApplicationManager.Controllers
                             .ToList());
             }
 
-            var user = new UserEntity { UserName = model.Email, Email = model.Email };
+            var user = new UserEntity { UserName = model.UserName, Email = model.UserName };
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
@@ -67,7 +67,7 @@ namespace ApplicationManager.Controllers
                 return BadRequest();
             }
 
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false,
+            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, isPersistent: false,
                 lockoutOnFailure: false);
 
             if (!result.Succeeded)
@@ -86,7 +86,7 @@ namespace ApplicationManager.Controllers
                 return BadRequest();
             }
 
-            var user = await _userManager.FindByNameAsync(model.Email);
+            var user = await _userManager.FindByNameAsync(model.UserName);
 
             if (user == null || _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password) != PasswordVerificationResult.Success)
             {

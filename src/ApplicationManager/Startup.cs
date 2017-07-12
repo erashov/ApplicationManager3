@@ -34,6 +34,7 @@ namespace ApplicationManager
         public void ConfigureServices(IServiceCollection services)
         {
 
+            // Add framework services.
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -44,12 +45,10 @@ namespace ApplicationManager
                 cfg.AddPolicy("isSuperUser", p => p.RequireClaim("isSuperUser", "true"));
             });
 
-     
-
-            // Add framework services.
-            services.AddMvc();
             services.Configure<AppConfiguration>(Configuration.GetSection("AppConfiguration"));
             services.AddTransient<IdentitySetup>();
+            services.AddMvc();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
