@@ -11,10 +11,10 @@ import { AlertComponent } from "./_directives/index";
 import { HomeComponent } from "./home/index";
 import { LoginComponent } from "./login/index";
 import { RegisterComponent } from "./register/index";
+
+import { routing } from "./app.routing";
 import { AuthGuard } from "./_guards/index";
 import { AlertService, AuthenticationService, UserService } from "./_services/index";
-import { routing } from "./app.routing";
-
 export const sharedConfig: NgModule = {
     bootstrap: [AppComponent],
     declarations: [
@@ -34,6 +34,7 @@ export const sharedConfig: NgModule = {
         AuthGuard,
         AlertService,
         AuthenticationService,
-        UserService
+        UserService,
+
     ],
 };

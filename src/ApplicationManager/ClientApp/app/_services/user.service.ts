@@ -41,7 +41,7 @@ export class UserService {
     private jwt() {
         // create authorization header with jwt token
         // tslint:disable-next-line:typedef
-        let currentUser ="";// JSON.parse(localStorage.getItem("currentUser"));
+        let currentUser =JSON.parse(localStorage.getItem("currentUser"));
         if (currentUser && currentUser.token) {
             // tslint:disable-next-line:typedef
             let headers = new Headers({ "Authorization": "Bearer " + currentUser.token });

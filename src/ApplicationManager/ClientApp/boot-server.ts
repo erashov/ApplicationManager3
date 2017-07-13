@@ -4,7 +4,7 @@ import "rxjs/add/operator/first";
 import { enableProdMode, ApplicationRef, NgZone, ValueProvider } from "@angular/core";
 import { platformDynamicServer, PlatformState, INITIAL_CONFIG } from "@angular/platform-server";
 import { createServerRenderer, RenderResult } from "aspnet-prerendering";
-import { AppModuleServer } from "./app/app.module.server";
+import { AppModule } from "./app/app.module.server";
 
 enableProdMode();
 
@@ -15,15 +15,18 @@ export default createServerRenderer(params => {
         { provide: "ORIGIN_URL", useValue: params.origin }
     ];
 
-    return platformDynamicServer(providers).bootstrapModule(AppModuleServer).then(moduleRef => {
+    return platformDynamicServer(providers).bootstrapModule(AppModule).then(moduleRef => {
+        // tslint:disable-next-line:typedef
         const appRef = moduleRef.injector.get(ApplicationRef);
+        // tslint:disable-next-line:typedef
         const state = moduleRef.injector.get(PlatformState);
+        // tslint:disable-next-line:typedef
         const zone = moduleRef.injector.get(NgZone);
 
         return new Promise<RenderResult>((resolve, reject) => {
             zone.onError.subscribe(errorInfo => reject(errorInfo));
             appRef.isStable.first(isStable => isStable).subscribe(() => {
-                // Because 'onStable' fires before 'onError', we have to delay slightly before
+                // because 'onStable' fires before 'onError', we have to delay slightly before
                 // completing the request in case there's an error to report
                 setImmediate(() => {
                     resolve({

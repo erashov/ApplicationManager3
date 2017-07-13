@@ -15,10 +15,10 @@
     "@angular/platform-browser-dynamic": "4.2.6",
     "@angular/platform-server": "4.2.6",
     "@angular/router": "4.2.6",
-    "@types/node": "^8.0.10",
+    "@types/node": "^8.0.11",
     "angular2-template-loader": "0.6.2",
     "aspnet-prerendering": "^3.0.1",
-    "aspnet-webpack": "^2.0.0",
+    "aspnet-webpack": "^2.0.1",
     "awesome-typescript-loader": "3.2.1",
     "bootstrap": "3.3.7",
     "css": "2.2.1",
@@ -43,7 +43,7 @@
     "webpack": "^3.2.0",
     "webpack-hot-middleware": "2.18.2",
     "webpack-merge": "4.1.0",
-    "zone.js": "0.8.12"
+    "zone.js": "^0.8.13"
   },
   "devDependencies": {
     "@types/chai": "4.0.1",

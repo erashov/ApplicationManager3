@@ -2,7 +2,7 @@ import "reflect-metadata";
 import "zone.js";
 import { enableProdMode } from "@angular/core";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
-import { AppModuleClient } from "./app/app.module.client";
+import { AppModule } from "./app/app.module.client";
 
 if (module['hot']) {
     module['hot'].accept();
@@ -20,4 +20,4 @@ if (module['hot']) {
 // Note: @ng-tools/webpack looks for the following expression when performing production
 // builds. Don't change how this line looks, otherwise you may break tree-shaking.
 // tslint:disable-next-line:typedef
-const modulePromise = platformBrowserDynamic().bootstrapModule(AppModuleClient);
+const modulePromise = platformBrowserDynamic().bootstrapModule(AppModule);
