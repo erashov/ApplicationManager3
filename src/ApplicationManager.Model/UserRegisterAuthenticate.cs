@@ -5,7 +5,7 @@ namespace ApplicationManager.Model
     public class UserRegisterAuthenticate
     {
         [Required]
-        [EmailAddress]
+        //[EmailAddress]
         [Display(Name = "UserName")]
         public string UserName { get; set; }
 
@@ -14,5 +14,7 @@ namespace ApplicationManager.Model
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }
