@@ -11,7 +11,7 @@ enableProdMode();
 export default createServerRenderer(params => {
     // tslint:disable-next-line:typedef
     const providers = [
-        { provide: INITIAL_CONFIG, useValue: { document: "<app-root></app-root>", url: params.url } },
+        { provide: INITIAL_CONFIG, useValue: { document: "<app></app>", url: params.url } },
         { provide: "ORIGIN_URL", useValue: params.origin }
     ];
 
