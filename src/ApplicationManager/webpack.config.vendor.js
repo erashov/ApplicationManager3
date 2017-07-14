@@ -30,7 +30,8 @@ module.exports = (env) => {
                 'es6-shim',
                 'es6-promise',
                 'event-source-polyfill',
-                'jquery',
+                'chart.js/dist/Chart.js',
+                //'jquery',
                 'zone.js',
             ]
         },
