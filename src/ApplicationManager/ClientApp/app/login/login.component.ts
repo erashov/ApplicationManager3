@@ -2,11 +2,12 @@
 import { Router, ActivatedRoute } from "@angular/router";
 
 import { AlertService, AuthenticationService } from "../_services/index";
-
+import { routerTransition } from '../router.animations';
 @Component({
     moduleId: module.id.toString(),
     templateUrl: "login.component.html",
-    styleUrls:['./login.component.css']
+    styleUrls: ['./login.component.scss'],
+    animations: [routerTransition()]
 })
 
 export class LoginComponent implements OnInit {
@@ -33,12 +34,12 @@ export class LoginComponent implements OnInit {
         this.loading = true;
         this.authenticationService.login(this.model.username, this.model.password)
             .subscribe(
-                data => {
-                    this.router.navigate([this.returnUrl]);
-                },
-                error => {
-                    this.alertService.error(error);
-                    this.loading = false;
-                });
+            data => {
+                this.router.navigate([this.returnUrl]);
+            },
+            error => {
+                this.alertService.error(error);
+                this.loading = false;
+            });
     }
 }
