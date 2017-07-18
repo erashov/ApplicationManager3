@@ -30,7 +30,7 @@ module.exports = (env) => {
                 'bootstrap/dist/css/bootstrap.css',
                 'es6-shim',
                 'es6-promise',
-                'event-source-polyfill',      
+                'event-source-polyfill',
                 'zone.js',
             ]
         },
@@ -61,7 +61,11 @@ module.exports = (env) => {
                 name: '[name]_[hash]'
             })
         ].concat(isDevBuild ? [] : [
-            new webpack.optimize.UglifyJsPlugin()
+            new webpack.optimize.UglifyJsPlugin({
+                output: {
+                    comments: false
+                }
+            })
         ])
     });
 

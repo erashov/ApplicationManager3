@@ -18,6 +18,7 @@ import { RegisterComponent } from "./register/index";
 //import {NavBarComponent} from './nav-bar/nav-bar.component';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { HeaderComponent } from './shared/components/header/header.component';
+import { ApplicationsComponent } from './applications/applications.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 
 export const sharedConfig: NgModule = {
@@ -28,7 +29,7 @@ export const sharedConfig: NgModule = {
         HomeComponent,
         LoginComponent,
         RegisterComponent,
-        //NavBarComponent,
+        ApplicationsComponent,
         HeaderComponent,
         SidebarComponent
     ],

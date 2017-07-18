@@ -5,6 +5,7 @@ import { enableProdMode, ApplicationRef, NgZone, ValueProvider } from "@angular/
 import { platformDynamicServer, PlatformState, INITIAL_CONFIG } from "@angular/platform-server";
 import { createServerRenderer, RenderResult } from "aspnet-prerendering";
 import { AppModule } from "./app/app.module.server";
+import './app/polyfills';
 
 enableProdMode();
 
