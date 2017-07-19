@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ApplicationManager.DAL.Entites;
+using System.Linq;
 namespace ApplicationManager.DAL
 {
     public class AppDbContext : IdentityDbContext<UserEntity>

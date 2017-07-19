@@ -17,8 +17,8 @@ module.exports = (env) => {
         entry: {
             vendor: [
                 '@angular/animations',
-                '@angular/common',
-                '@angular/compiler',
+               // '@angular/common',
+               // '@angular/compiler',
                 '@angular/core',
                 '@angular/forms',
                 '@angular/http',
@@ -26,12 +26,15 @@ module.exports = (env) => {
                 '@angular/platform-browser-dynamic',
                 '@angular/router',
                 'font-awesome/css/font-awesome.css',
-                'bootstrap',
+                //'bootstrap',
                 'bootstrap/dist/css/bootstrap.css',
-                'es6-shim',
-                'es6-promise',
+               // 'core-js/es6',
+                //'es6-shim',
+                //'es6-promise',
+               // 'core-js/client/shim.min.js',
                 'event-source-polyfill',
                 'zone.js',
+              //  'jquery'
             ]
         },
         output: {

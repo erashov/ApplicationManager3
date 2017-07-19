@@ -10,9 +10,9 @@ namespace ApplicationManager.DAL.Entites
         [Required]
         public string Address { get; set; }
         public int? DistrictId { get; set; }
-        public DistrictEntity District { get; set; }
+        public virtual DistrictEntity District { get; set; }
         public int ApplicationStatusId { get; set; }
-        public ApplicationStatusEntity ApplicationStatus { get; set; }
+        public virtual ApplicationStatusEntity ApplicationStatus { get; set; }
 
     }
 }
