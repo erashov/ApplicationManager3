@@ -21,7 +21,7 @@ namespace ApplicationManager.Repository.Concrete
 
         public IQueryable<ApplicationEntiry> Find()
         {
-            return _appContext.Applications.Include(c=>c.ApplicationStatus).Include(c=>c.District);
+            return _appContext.Applications.Include(c => c.ApplicationStatus).Include(c => c.District);
         }
 
         public ApplicationEntiry FindById(int id)
@@ -31,7 +31,7 @@ namespace ApplicationManager.Repository.Concrete
 
         public IQueryable<ApplicationEntiry> FindPage(int page, int count)
         {
-            throw new NotImplementedException();
+            return Find().OrderByDescending(i => i.ApplicationId).Skip(count * (page - 1)).Take(count);
         }
 
         public ApplicationEntiry Remove(ApplicationEntiry entity)
@@ -41,7 +41,17 @@ namespace ApplicationManager.Repository.Concrete
 
         public ApplicationEntiry Update(ApplicationEntiry entity)
         {
-            throw new NotImplementedException();
+            _appContext.Applications.Attach(entity);
+            _appContext.Entry(entity).State = EntityState.Modified;
+            _appContext.SaveChanges();
+            //var app = _appContext.Applications.FirstOrDefault(c => c.ApplicationId == entity.ApplicationId);
+            //if (app != null)
+            //{
+            //    app.Address = entity.Address;
+                
+            //}
+
+            return entity;
         }
     }
 }

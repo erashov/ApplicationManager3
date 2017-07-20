@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ApplicationManager.Repository;
 using ApplicationManager.DAL.Entites;
+using ApplicationManager.Model.View;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,6 +26,17 @@ namespace ApplicationManager.Controllers
             return _application.Find();
         }
 
+        [HttpGet]
+        [Route("getpage")]
+        public async Task<PagingModelView<ApplicationEntiry>> Get(int page, int count)
+        {
+            var t1 = Task.Run(() => _application.FindPage(page, count));
+            var t2 = Task.Run(() => _application.Find().Count());
+            await Task.WhenAll(t1, t2);
+            return new PagingModelView<ApplicationEntiry>() { Records=t1.Result, Count=t2.Result};
+        }
+
+
         // GET api/values/5
         [HttpGet("{id}")]
         public string Get(int id)
@@ -39,10 +51,11 @@ namespace ApplicationManager.Controllers
             _application.Add(value);
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+
+        [HttpPut()]
+        public ApplicationEntiry Put([FromBody]ApplicationEntiry value)
         {
+            return _application.Update(value);
         }
 
         // DELETE api/values/5
