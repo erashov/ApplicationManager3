@@ -2,6 +2,10 @@ import { Application } from "./index";
 
 export class PagingList {
    
-    Records: Application[];
-    Count: number;
+    records: Application[];
+    count: number;
+    constructor(count:number, records:Application[]){
+        this.count=count;  
+        this.records=records;
+    }
 }

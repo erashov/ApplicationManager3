@@ -1,6 +1,6 @@
-<p *ngIf="!list"><em>Loading...</em></p>
+<p *ngIf="!applications"><em>Loading...</em></p>
 
-<table class='table table-striped' *ngIf="list">
+<table class='table table-striped' *ngIf="applications">
     <thead>
         <tr>
             <th>№ Заявки</th>
@@ -10,7 +10,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let application of list.Records">
+        <tr *ngFor="let application of applications">
             <td>{{ application.applicationId }}</td>
             <td>{{ application.address }}</td>
             <td>{{ application.district.districtName }}</td>
@@ -18,4 +18,5 @@
         </tr>
     </tbody>
 </table>
-<ngb-pagination [collectionSize]="70" [(page)]="page"></ngb-pagination>
+ <ngb-pagination [(collectionSize)]="count" [(page)]="page" (pageChange)="loadPage($event)" [(pageSize)]="itemsPerPage" [maxSize]="7" [rotate]="true"></ngb-pagination> 
+<!-- <ngb-pagination [collectionSize]="applications" [pageSize]="itemsPerPage" [(page)]="page" [maxSize]="7" [rotate]="true" (pageChange)="loadPage($event)"></ngb-pagination> -->

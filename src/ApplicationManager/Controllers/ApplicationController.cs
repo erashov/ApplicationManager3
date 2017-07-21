@@ -32,6 +32,7 @@ namespace ApplicationManager.Controllers
         {
             var t1 = Task.Run(() => _application.FindPage(page, count));
             var t2 = Task.Run(() => _application.Find().Count());
+
             await Task.WhenAll(t1, t2);
             return new PagingModelView<ApplicationEntiry>() { Records=t1.Result, Count=t2.Result};
         }

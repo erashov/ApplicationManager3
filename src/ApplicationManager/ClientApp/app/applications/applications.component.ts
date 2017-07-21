@@ -1,30 +1,44 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Application } from "../_models/index";
-import { Http } from "@angular/http";
-import { PagingList } from "../_models/pagingList";
+import { Application, PagingList } from "../_models/index";
+import { ApplicationService } from "../_services/application.service"
+
 
 @Component({
     selector: 'applications',
-    templateUrl: 'applications.component.html'
+    templateUrl: 'applications.component.html',
+    providers: [ApplicationService]
 })
 
 export class ApplicationsComponent implements OnInit {
 
     public applications: Application[];
-    public page=1;
-    public list: PagingList;
+    private page: number = 1;
+    previousPage: any;
+    private list: PagingList;
+    private itemsPerPage: number = 10;
+    count: number;
 
-    constructor(http: Http, @Inject('ORIGIN_URL') originUrl: string) {
 
-        
-        
-        http.get(originUrl + '/api/Application/getpage?page='+this.page+'&count=30').subscribe(result => {
-            this.list = result.json() as PagingList;
-        });
-        
-   //  console.log(this.applications);
-     
+    loadPage(page: number) {
+        if (page !== this.previousPage) {
+            this.previousPage = page;
+            this.loadData();
+        }
     }
 
-    ngOnInit() { }
+    loadData() {
+        this.appserv.getListPage(this.page, this.itemsPerPage)
+            .subscribe((data) => {
+                this.count = data.count,
+                    this.applications = data.records
+            });
+
+    }
+
+    constructor(private appserv: ApplicationService) {
+    }
+
+    ngOnInit() {
+        this.loadPage(this.page);
+    }
 }
