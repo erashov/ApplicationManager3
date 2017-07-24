@@ -1,6 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Application, PagingList } from "../_models/index";
 import { ApplicationService } from "../_services/application.service"
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ApplicationEditComponent } from "./edit/application.edit.component";
 
 
 @Component({
@@ -34,8 +36,13 @@ export class ApplicationsComponent implements OnInit {
             });
 
     }
-
-    constructor(private appserv: ApplicationService) {
+    open() {
+        console.log("111");
+        
+        const modalRef = this.modalService.open(ApplicationEditComponent);
+        modalRef.componentInstance.name = 'World';
+    }
+    constructor(private appserv: ApplicationService, private modalService: NgbModal) {
     }
 
     ngOnInit() {

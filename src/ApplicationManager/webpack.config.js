@@ -16,7 +16,7 @@ module.exports = (env) => {
         },
         module: {
             rules: [
-                { test: /\.ts$/, include: /ClientApp/, use: ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] },
+                { test: /\.ts$/, include: /ClientAppMaterial/, use: ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] },
                 { test: /\.html$/, use: 'html-loader?minimize=false' },
                 { test: /\.scss$/, use: [ 'to-string-loader', 'css-loader'  ] },
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' },
@@ -29,7 +29,7 @@ module.exports = (env) => {
     // Configuration for client-side bundle suitable for running in browsers
     const clientBundleOutputDir = './wwwroot/dist';
     const clientBundleConfig = merge(sharedConfig, {
-        entry: { 'main-client': './ClientApp/boot-client.ts' },
+        entry: { 'main-client': './ClientAppMaterial/boot-client.ts' },
         output: { path: path.join(__dirname, clientBundleOutputDir) },
         plugins: [
             new webpack.DllReferencePlugin({
@@ -55,18 +55,18 @@ module.exports = (env) => {
     // Configuration for server-side (prerendering) bundle suitable for running in Node
     const serverBundleConfig = merge(sharedConfig, {
         resolve: { mainFields: ['main'] },
-        entry: { 'main-server': './ClientApp/boot-server.ts' },
+        entry: { 'main-server': './ClientAppMaterial/boot-server.ts' },
         plugins: [
             new webpack.DllReferencePlugin({
                 context: __dirname,
-                manifest: require('./ClientApp/dist/vendor-manifest.json'),
+                manifest: require('./ClientAppMaterial/dist/vendor-manifest.json'),
                 sourceType: 'commonjs2',
                 name: './vendor'
             })
         ],
         output: {
             libraryTarget: 'commonjs',
-            path: path.join(__dirname, './ClientApp/dist')
+            path: path.join(__dirname, './ClientAppMaterial/dist')
         },
         target: 'node',
         devtool: 'inline-source-map'
