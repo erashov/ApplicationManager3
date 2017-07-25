@@ -17,8 +17,8 @@ module.exports = (env) => {
         entry: {
             vendor: [
                 '@angular/animations',
-                // '@angular/common',
-                // '@angular/compiler',
+                //'@angular/common',
+                //'@angular/compiler',
                 '@angular/material',
                 '@angular/cdk',
                 '@angular/core',
@@ -29,16 +29,16 @@ module.exports = (env) => {
                 '@angular/router',
                 //'font-awesome/css/font-awesome.min.css',
                 //'bootstrap',
-               // 'bootstrap/dist/css/bootstrap.min.css',
+                //'bootstrap/dist/css/bootstrap.min.css',
                 '@angular/material/prebuilt-themes/indigo-pink.css',
                 'hammerjs',
-                // 'core-js/es6',
+                //'core-js/es6',
                 'es6-shim',
-                //'es6-promise',
-                // 'core-js/client/shim.min.js',
+                'es6-promise',
+                //'core-js/client/shim.min.js',
                 'event-source-polyfill',
                 'zone.js',
-                //  'jquery'
+                //'jquery'
             ]
         },
         output: {
@@ -80,7 +80,7 @@ module.exports = (env) => {
         target: 'node',
         resolve: { mainFields: ['main'] },
         output: {
-            path: path.join(__dirname, 'ClientAppMaterial', 'dist'),
+            path: path.join(__dirname, 'ClientApp', 'dist'),
             libraryTarget: 'commonjs2',
         },
         module: {
@@ -89,7 +89,7 @@ module.exports = (env) => {
         entry: { vendor: ['aspnet-prerendering'] },
         plugins: [
             new webpack.DllPlugin({
-                path: path.join(__dirname, 'ClientAppMaterial', 'dist', '[name]-manifest.json'),
+                path: path.join(__dirname, 'ClientApp', 'dist', '[name]-manifest.json'),
                 name: '[name]_[hash]'
             })
         ]

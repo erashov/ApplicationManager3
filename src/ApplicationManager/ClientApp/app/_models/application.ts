@@ -1,7 +1,7 @@
 import { district } from "./district";
 import { applicationStatus } from "./applicationStatus";
 
-export class Application {
+export interface Application {
     applicationId: number;
     address: string;
     districtId: number;

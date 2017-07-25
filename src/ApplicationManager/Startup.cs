@@ -50,7 +50,7 @@ namespace ApplicationManager
             services.Configure<AppConfiguration>(Configuration.GetSection("AppConfiguration"));
             services.AddTransient<IdentitySetup>();
 
-            services.AddTransient<IBaseRepository<ApplicationEntiry>, ApplicationRepository>();
+            services.AddSingleton<IBaseRepository<ApplicationEntiry>, ApplicationRepository>();
             services.AddMvc();
 
         }

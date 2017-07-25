@@ -6,7 +6,7 @@ namespace ApplicationManager.Repository
     {
         IQueryable<T> Find();
 
-        IQueryable<T> FindPage(int page, int count);
+        IQueryable<T> FindPage(int page, int pageSize);
 
         T FindById(int id);
 

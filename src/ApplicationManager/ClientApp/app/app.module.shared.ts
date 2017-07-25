@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -20,7 +20,10 @@ import { SidebarComponent } from './shared/components/sidebar/sidebar.component'
 import { HeaderComponent } from './shared/components/header/header.component';
 import { ApplicationsComponent } from './applications/applications.component';
 import { ApplicationEditComponent } from "./applications/edit/application.edit.component";
-import { NgbModule} from '@ng-bootstrap/ng-bootstrap'
+import { MaterialModule, MdInputModule, MdButtonModule, MdCardModule, MdTableModule,MdPaginatorModule } from '@angular/material';
+import { CdkTableModule } from '@angular/cdk';
+
+import 'hammerjs';
 
 export const sharedConfig: NgModule = {
     bootstrap: [AppComponent],
@@ -34,13 +37,18 @@ export const sharedConfig: NgModule = {
         HeaderComponent,
         SidebarComponent,
     ],
-    entryComponents: [ApplicationEditComponent],
+    
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpModule,
-        NgbModule.forRoot(),
+        MaterialModule,
+        MdInputModule,
+        MdButtonModule,
+        MdTableModule,MdPaginatorModule,
+        CdkTableModule,        
         routing
     ],
     providers: [

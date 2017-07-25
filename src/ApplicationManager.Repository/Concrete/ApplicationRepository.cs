@@ -29,9 +29,9 @@ namespace ApplicationManager.Repository.Concrete
             throw new NotImplementedException();
         }
 
-        public IQueryable<ApplicationEntiry> FindPage(int page, int count)
+        public IQueryable<ApplicationEntiry> FindPage(int page, int pageSize)
         {
-            return Find().OrderByDescending(i => i.ApplicationId).Skip(count * (page - 1)).Take(count);
+            return Find().OrderByDescending(i => i.ApplicationId).Skip(pageSize * (page - 1)).Take(pageSize);
         }
 
         public ApplicationEntiry Remove(ApplicationEntiry entity)

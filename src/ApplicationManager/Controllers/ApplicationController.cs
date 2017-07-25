@@ -28,9 +28,9 @@ namespace ApplicationManager.Controllers
 
         [HttpGet]
         [Route("getpage")]
-        public async Task<PagingModelView<ApplicationEntiry>> Get(int page, int count)
+        public async Task<PagingModelView<ApplicationEntiry>> Get(int page, int pageSize)
         {
-            var t1 = Task.Run(() => _application.FindPage(page, count));
+            var t1 = Task.Run(() => _application.FindPage(page, pageSize));
             var t2 = Task.Run(() => _application.Find().Count());
 
             await Task.WhenAll(t1, t2);
