@@ -37,7 +37,7 @@ export const sharedConfig: NgModule = {
         HeaderComponent,
         SidebarComponent,
     ],
-    entryComponents: [ApplicationEditComponent],
+    
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
