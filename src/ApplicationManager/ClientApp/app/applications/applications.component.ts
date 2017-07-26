@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { DataSource } from '@angular/cdk';
 import { MdPaginator } from '@angular/material';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -9,172 +9,122 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/map';
 import { Application } from "../_models/index";
 import { PagingList } from "../_models/pagingList";
+import { Subscriber } from "rxjs/Subscriber";
 
 @Component({
   selector: 'applications',
   templateUrl: 'applications.component.html', providers: [ApplicationService]
 })
-export class ApplicationsComponent {
+export class ApplicationsComponent implements OnInit {
   displayedColumns = ['applicationId', 'address', 'districtName', 'statusName'];
-  exampleDatabase: ExampleDatabase;
+  dataChange: BehaviorSubject<Application[]> = new BehaviorSubject<Application[]>([]);
   dataSource: ExampleDataSource | null;
+  public count: number;
+  public _paginator: Paginator;
+
 
   @ViewChild(MdPaginator) paginator: MdPaginator;
 
   constructor(private appserv: ApplicationService) {
+
+    //this.count=this.loadData(this.paginator.pageIndex, this.paginator.pageSize).count;
+
+    // console.log(this.dataSource);
   }
 
   ngOnInit() {
-    this.exampleDatabase = new ExampleDatabase(this.appserv, this.paginator);
-    this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.appserv);
+    //var c = this.getData();
+    this._paginator = new Paginator(this.appserv, this.paginator.pageIndex, 10)
+
+    //  th
+    this.dataChange.next(this._paginator.applications);
+    this.dataSource = new ExampleDataSource(this.dataChange, this.paginator, this._paginator,this.appserv);
+    console.log(this.count);
+
   }
+
+  /*   getData(pageIndex: number, pageSize: number) {
+  
+      return this.appserv.getListPage(pageIndex + 1, pageSize)
+        .subscribe((data) => {
+          this.count = data.count,
+            this.dataChange.next(data.records)
+          data.records.forEach(element => {
+            this.applications.push(element);
+            // this.dataChange.next(element)
+          }
+          );
+        },
+        err => {
+          console.log(err);
+        });
+  
+    } */
 }
-
-
-/** An example database that the data source uses to retrieve data for the table. */
-export class ExampleDatabase {
-  /** Stream that emits whenever the data has been modified. */
-  dataChange: BehaviorSubject<Application[]> = new BehaviorSubject<Application[]>([]);
-  get data(): Application[] { return this.applications; }
-  private applications: Application[];
-  public count: number;
-
-  private _appserv: ApplicationService;
-
-
-  constructor(appserv: ApplicationService, private _paginator: MdPaginator) {
-    this._appserv = appserv;
-//setTimeout(() => {
-   this.loadData(this._paginator.pageIndex, this._paginator.pageSize);
-  //  }, 6000);
-
- 
-    console.log(this._paginator.pageSize);
-    console.log(this.applications);
-    
-    
-    //this.addUser();
-  }
-
-  /** Adds a new user to the database. */
-  addUser() {
-
-
-    this.dataChange.next(this.applications);
-  }
-
-  loadData(pageIndex: number, pageSize: number) {
-   // console.log(pageIndex + ":" + pageSize);
-   // let dataList: PagingList;
-
-    this._appserv.getListPage(pageIndex + 1, pageSize)
-      .subscribe((data) => {
-        this.count = data.count,
-          this.applications = data.records
-      });
-
-  }
-
-}
-
-
 
 export class ExampleDataSource extends DataSource<any> {
-
-  private _appserv: ApplicationService;
-  private applications: Application[];
-  private count: number;
-
-  constructor(private _exampleDatabase: ExampleDatabase, private _paginator: MdPaginator, appserv: ApplicationService) {
+  /*   // dataChange: BehaviorSubject<Application[]> = new BehaviorSubject<Application[]>([]);
+    // applications: Application[];
+    constructor(private dataChange: BehaviorSubject<Application[]>, private _paginator: MdPaginator) {
+      super();
+      // this.dataChange.next(applications);
+    }
+  
+    connect(): Observable<Application[]> {
+      return Observable.create((observer: Subscriber<any>) => {
+        observer.next(this.dataChange);
+        observer.complete();
+      });//Observable.of(this.records);
+    }
+    disconnect() { } */
+  constructor(private dataChange: BehaviorSubject<Application[]>, private _paginator: MdPaginator, private pagin: Paginator, private appserv: ApplicationService) {
     super();
-    this._appserv = appserv;
-
+    
   }
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
   connect(): Observable<Application[]> {
-
-
     const displayDataChanges = [
-      this._exampleDatabase.dataChange,
-      this._paginator.page
-
+      this.dataChange,
+      this._paginator.page,
     ];
 
-
-
     return Observable.merge(...displayDataChanges).map(() => {
-      let data = this._exampleDatabase.data;
-
-
+      const data = this.pagin.applications.slice();
+      this.pagin = new Paginator(this.appserv, this._paginator.pageIndex, this._paginator.pageSize)
       // Grab the page's slice of data.
-      const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-
-      this.loadData(this._paginator.pageIndex, this._paginator.pageSize);
-    // console.log(data.length);
-
-      return this.applications;;
+      //const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
+      return this.pagin.applications;
     });
-  }
-  loadData(pageIndex: number, pageSize: number) {
-
-    this._appserv.getListPage(pageIndex + 1, pageSize)
-      .subscribe((data) => {
-        this.count = data.count,
-          this.applications = data.records
-      });
-
   }
 
   disconnect() { }
 
 }
+export class Paginator {
+  public count: number;
+  public applications: Application[] = [];
+  constructor(private appserv: ApplicationService, pageIndex: number, pageSize: number) {
 
-/* import { Component, OnInit, Inject } from '@angular/core';
-import { Application, PagingList } from "../_models/index";
-import { ApplicationService } from "../_services/application.service"
-//import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ApplicationEditComponent } from "./edit/application.edit.component";
+    this.getData(pageIndex, pageSize);
+  }
 
+  private getData(pageIndex: number, pageSize: number) {
 
-@Component({
-    selector: 'applications',
-    templateUrl: 'applications.component.html',
-    providers: [ApplicationService]
-})
+    return this.appserv.getListPage(pageIndex + 1, pageSize)
+      .subscribe((data) => {
+        this.count = data.count,
 
-export class ApplicationsComponent implements OnInit {
+          data.records.forEach(element => {
+            this.applications.push(element);
+          }
 
-    public applications: Application[];
-    private page: number = 1;
-    previousPage: any;
-    private list: PagingList;
-    private itemsPerPage: number = 10;
-    count: number;
+          ); console.log(this.applications);
+        console.log(this.count);
+      },
+      err => {
+        console.log(err);
+      });
 
-
-    loadPage(page: number) {
-        if (page !== this.previousPage) {
-            this.previousPage = page;
-            this.loadData();
-        }
-    }
-
-    loadData() {
-        this.appserv.getListPage(this.page, this.itemsPerPage)
-            .subscribe((data) => {
-                this.count = data.count,
-                    this.applications = data.records
-            });
-
-    }
-    open() {
-
-    }
-    constructor(private appserv: ApplicationService) {
-    }
-
-    ngOnInit() {
-        this.loadPage(this.page);
-    }
-} */
+  }
+}

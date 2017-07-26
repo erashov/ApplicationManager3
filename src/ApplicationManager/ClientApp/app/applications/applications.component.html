@@ -1,67 +1,33 @@
 <div class="example-container mat-elevation-z8">
 
   <md-table #table [dataSource]="dataSource">
-
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
-
-    <!-- ID Column -->
     <ng-container cdkColumnDef="applicationId">
       <md-header-cell *cdkHeaderCellDef> ID </md-header-cell>
       <md-cell *cdkCellDef="let row"> {{row.applicationId}} </md-cell>
     </ng-container>
 
-    <!-- Progress Column -->
     <ng-container cdkColumnDef="address">
       <md-header-cell *cdkHeaderCellDef> Progress </md-header-cell>
       <md-cell *cdkCellDef="let row"> {{row.address}} </md-cell>
     </ng-container>
 
-    <!-- Name Column -->
      <ng-container cdkColumnDef="districtName">
       <md-header-cell *cdkHeaderCellDef> Name </md-header-cell>
       <md-cell *cdkCellDef="let row"> {{row.district.districtName}} </md-cell>
     </ng-container> 
 
-    <!-- Color Column -->
      <ng-container cdkColumnDef="statusName">
       <md-header-cell *cdkHeaderCellDef> Color </md-header-cell>
       <md-cell *cdkCellDef="let row"> {{row.applicationStatus.statusName}} </md-cell>
     </ng-container> 
-
     <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
     <md-row *cdkRowDef="let row; columns: displayedColumns;"></md-row>
   </md-table>
 
   <md-paginator #paginator
-                [length]="exampleDatabase.count"
-                [pageIndex]="0"
+                [length]="_paginator.count"
+                [pageIndex]="1"
                 [pageSize]="20"
                 [pageSizeOptions]="[5, 10, 20, 50]">
   </md-paginator>
 </div>
-
-
-<!-- 
-<p *ngIf="!applications"><em>Loading...</em></p>
-
-<table class='table table-striped' *ngIf="applications">
-    <thead>
-        <tr>
-            <th>№ Заявки</th>
-            <th>Адрес</th>
-            <th>Округ</th>
-            <th>Статус</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let application of applications">
-            <td>{{ application.applicationId }}</td>
-            <td>{{ application.address }}</td>
-            <td>{{ application.district.districtName }}</td>
-            <td>{{ application.applicationStatus.statusName }}</td>
-        </tr>
-    </tbody>
-</table> -->
- <!-- <ngb-pagination [(collectionSize)]="count" [(page)]="page" (pageChange)="loadPage($event)" [(pageSize)]="itemsPerPage" [maxSize]="7" [rotate]="true"></ngb-pagination>  -->
-<!-- <ngb-pagination [collectionSize]="applications" [pageSize]="itemsPerPage" [(page)]="page" [maxSize]="7" [rotate]="true" (pageChange)="loadPage($event)"></ngb-pagination> -->

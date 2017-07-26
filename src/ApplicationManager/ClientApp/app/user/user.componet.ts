@@ -9,7 +9,7 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/map';
 @Component({
     selector: 'user',
-    templateUrl: 'user.component.html'
+    templateUrl: 'user.componet.html'
 })
 
 export class UserComponent implements OnInit {
@@ -21,8 +21,8 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
     this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator);
-    console.log(this.exampleDatabase);
-    console.log(this.paginator);
+
+    console.log(this.dataSource);
     
   }
 }

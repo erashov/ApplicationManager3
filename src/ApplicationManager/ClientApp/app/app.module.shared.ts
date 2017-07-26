@@ -10,7 +10,7 @@ import { routing } from "./app.routing";
 import { AlertComponent } from "./_directives/index";
 import { AuthGuard } from "./_guards/index";
 import { AlertService, AuthenticationService, UserService } from "./_services/index";
-
+import{ UserComponent} from './user/user.componet';
 import { HomeComponent } from "./home/index";
 
 import { LoginComponent } from "./login/index";
@@ -35,7 +35,7 @@ export const sharedConfig: NgModule = {
         RegisterComponent,
         ApplicationsComponent,
         HeaderComponent,
-        SidebarComponent,
+        SidebarComponent,UserComponent
     ],
     
     imports: [
