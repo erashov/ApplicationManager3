@@ -13,10 +13,27 @@ export class ApplicationService {
     constructor(private http: Http, @Inject("ORIGIN_URL") originUrl: string) {
         this.url = originUrl;
     }
-    getListPage(page: number,amount:number): Observable<PagingList> {
-        return this.http.get(this.url+ '/api/Application/getpage?page='+page+ '&pageSize='+amount)
+    getListPage(page: number, amount: number): Observable<PagingList> {
+        return this.http.get(this.url + '/api/Application/getpage?page=' + page + '&pageSize=' + amount)
             .map((response: Response) => response.json())
             .map(({ count, records }) => new PagingList(count, records));
+    }
+
+    getList(page: number, amount: number): Observable<Application[]> {
+        return this.http.get(this.url + '/api/Application/getpage?page=' + page + '&pageSize=' + amount)
+            .map((response: Response) => response.json())
+            .map(({ records }) => records);
+    }
+
+    getAll(): Observable<Application[]> {
+        return this.http.get(this.url + '/api/Application/getAll')
+            .map((response: Response) => response.json())
+            .map((records) => records);
+    }
+    getItemAll(): Observable<Application[]> {
+        return this.http.get(this.url + '/api/Application/getAll')
+            .map(res => res.json())
+            .catch(err => Observable.throw(err));
     }
 
 

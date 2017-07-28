@@ -27,7 +27,7 @@ namespace ApplicationManager.Controllers
         }
 
         [HttpGet]
-        [Route("getpage")]
+        [Route("get")]
         public async Task<PagingModelView<ApplicationEntiry>> Get(int page, int pageSize)
         {
             var t1 = Task.Run(() => _application.FindPage(page, pageSize));
@@ -36,6 +36,14 @@ namespace ApplicationManager.Controllers
             await Task.WhenAll(t1, t2);
             return new PagingModelView<ApplicationEntiry>() { Records=t1.Result, Count=t2.Result};
         }
+
+        [HttpGet]
+        [Route("getpage")]
+        public IQueryable<ApplicationEntiry> GetPage(int page, int pageSize) => _application.FindPage(page, pageSize);
+
+        [HttpGet]
+        [Route("getAll")]
+        public IQueryable<ApplicationEntiry> GetAll() => _application.Find();//.FindPage(page, pageSize);
 
 
         // GET api/values/5

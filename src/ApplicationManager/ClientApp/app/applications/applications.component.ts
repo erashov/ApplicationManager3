@@ -13,13 +13,13 @@ import { Subscriber } from "rxjs/Subscriber";
 
 @Component({
   selector: 'applications',
-  templateUrl: 'applications.component.html', providers: [ApplicationService]
+  templateUrl: 'applications.component.html', styleUrls:["./applications.component.scss"], providers: [ApplicationService]
 })
 export class ApplicationsComponent implements OnInit {
   displayedColumns = ['applicationId', 'address', 'districtName', 'statusName'];
   dataChange: BehaviorSubject<Application[]> = new BehaviorSubject<Application[]>([]);
   dataSource: ExampleDataSource | null;
-  public count: number;
+  public count: number=0;
   public _paginator: Paginator;
 
 
@@ -27,39 +27,19 @@ export class ApplicationsComponent implements OnInit {
 
   constructor(private appserv: ApplicationService) {
 
-    //this.count=this.loadData(this.paginator.pageIndex, this.paginator.pageSize).count;
-
-    // console.log(this.dataSource);
   }
 
   ngOnInit() {
-    //var c = this.getData();
-    this._paginator = new Paginator(this.appserv, this.paginator.pageIndex, 10)
+    console.log(1);
+   this._paginator = new Paginator(this.appserv, this.paginator.pageIndex, 10);
 
-    //  th
-    this.dataChange.next(this._paginator.applications);
-    this.dataSource = new ExampleDataSource(this.dataChange, this.paginator, this._paginator,this.appserv);
-    console.log(this.count);
+    this.dataSource = new ExampleDataSource(this.dataChange, this.paginator, this._paginator, this.appserv);
+
+    console.log(this.dataSource);
 
   }
 
-  /*   getData(pageIndex: number, pageSize: number) {
-  
-      return this.appserv.getListPage(pageIndex + 1, pageSize)
-        .subscribe((data) => {
-          this.count = data.count,
-            this.dataChange.next(data.records)
-          data.records.forEach(element => {
-            this.applications.push(element);
-            // this.dataChange.next(element)
-          }
-          );
-        },
-        err => {
-          console.log(err);
-        });
-  
-    } */
+
 }
 
 export class ExampleDataSource extends DataSource<any> {
@@ -78,23 +58,32 @@ export class ExampleDataSource extends DataSource<any> {
     }
     disconnect() { } */
   constructor(private dataChange: BehaviorSubject<Application[]>, private _paginator: MdPaginator, private pagin: Paginator, private appserv: ApplicationService) {
+
     super();
-    
+ //this.pagin = new Paginator(this.appserv, this._paginator.pageIndex, this._paginator.pageSize);
   }
+
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
   connect(): Observable<Application[]> {
+           console.log(1.1);
+  // this.pagin = new Paginator(this.appserv, this._paginator.pageIndex, 10)
+    //console.log(this._paginator.applications);
+
+    this.dataChange.next(this.pagin.applications);
+
     const displayDataChanges = [
-      this.dataChange,
+        
+      //this.dataChange,
       this._paginator.page,
     ];
 
     return Observable.merge(...displayDataChanges).map(() => {
-      const data = this.pagin.applications.slice();
-      this.pagin = new Paginator(this.appserv, this._paginator.pageIndex, this._paginator.pageSize)
-      // Grab the page's slice of data.
-      //const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-      return this.pagin.applications;
+      console.log(2);
+            this.pagin = new Paginator(this.appserv, this._paginator.pageIndex, this._paginator.pageSize)
+      const data = this.pagin.applications;
+
+      return data;
     });
   }
 
@@ -105,7 +94,6 @@ export class Paginator {
   public count: number;
   public applications: Application[] = [];
   constructor(private appserv: ApplicationService, pageIndex: number, pageSize: number) {
-
     this.getData(pageIndex, pageSize);
   }
 
@@ -114,13 +102,10 @@ export class Paginator {
     return this.appserv.getListPage(pageIndex + 1, pageSize)
       .subscribe((data) => {
         this.count = data.count,
-
           data.records.forEach(element => {
             this.applications.push(element);
-          }
-
-          ); console.log(this.applications);
-        console.log(this.count);
+          });
+        console.log(3);
       },
       err => {
         console.log(err);

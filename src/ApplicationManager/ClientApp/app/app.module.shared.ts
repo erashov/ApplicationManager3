@@ -10,7 +10,7 @@ import { routing } from "./app.routing";
 import { AlertComponent } from "./_directives/index";
 import { AuthGuard } from "./_guards/index";
 import { AlertService, AuthenticationService, UserService } from "./_services/index";
-import{ UserComponent} from './user/user.componet';
+import { UserComponent } from './user/user.componet';
 import { HomeComponent } from "./home/index";
 
 import { LoginComponent } from "./login/index";
@@ -20,7 +20,39 @@ import { SidebarComponent } from './shared/components/sidebar/sidebar.component'
 import { HeaderComponent } from './shared/components/header/header.component';
 import { ApplicationsComponent } from './applications/applications.component';
 import { ApplicationEditComponent } from "./applications/edit/application.edit.component";
-import { MaterialModule, MdInputModule, MdButtonModule, MdCardModule, MdTableModule,MdPaginatorModule } from '@angular/material';
+import {
+    MaterialModule, MdAutocompleteModule,
+    MdButtonModule,
+    MdButtonToggleModule,
+    MdCardModule,
+    MdCheckboxModule,
+    MdChipsModule,
+    MdCoreModule,
+    MdDatepickerModule,
+    MdDialogModule,
+    MdExpansionModule,
+    MdGridListModule,
+    MdIconModule,
+    MdInputModule,
+    MdListModule,
+    MdMenuModule,
+    MdNativeDateModule,
+    MdPaginatorModule,
+    MdProgressBarModule,
+    MdProgressSpinnerModule,
+    MdRadioModule,
+    MdRippleModule,
+    MdSelectModule,
+    MdSidenavModule,
+    MdSliderModule,
+    MdSlideToggleModule,
+    MdSnackBarModule,
+    MdSortModule,
+    MdTableModule,
+    MdTabsModule,
+    MdToolbarModule,
+    MdTooltipModule,
+} from '@angular/material';
 import { CdkTableModule } from '@angular/cdk';
 
 import 'hammerjs';
@@ -35,9 +67,9 @@ export const sharedConfig: NgModule = {
         RegisterComponent,
         ApplicationsComponent,
         HeaderComponent,
-        SidebarComponent,UserComponent
+        SidebarComponent, UserComponent
     ],
-    
+
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
@@ -47,8 +79,38 @@ export const sharedConfig: NgModule = {
         MaterialModule,
         MdInputModule,
         MdButtonModule,
-        MdTableModule,MdPaginatorModule,
-        CdkTableModule,        
+        MdTableModule, MdAutocompleteModule,
+        MdButtonModule,
+        MdButtonToggleModule,
+        MdCardModule,
+        MdCheckboxModule,
+        MdChipsModule,
+        MdCoreModule,
+        MdDatepickerModule,
+        MdDialogModule,
+        MdExpansionModule,
+        MdGridListModule,
+        MdIconModule,
+        MdInputModule,
+        MdListModule,
+        MdMenuModule,
+        MdNativeDateModule,
+        MdPaginatorModule,
+        MdProgressBarModule,
+        MdProgressSpinnerModule,
+        MdRadioModule,
+        MdRippleModule,
+        MdSelectModule,
+        MdSidenavModule,
+        MdSliderModule,
+        MdSlideToggleModule,
+        MdSnackBarModule,
+        MdSortModule,
+        MdTableModule,
+        MdTabsModule,
+        MdToolbarModule,
+        MdTooltipModule,
+        CdkTableModule,
         routing
     ],
     providers: [

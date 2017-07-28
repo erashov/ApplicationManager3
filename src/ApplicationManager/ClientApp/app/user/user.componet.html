@@ -1,67 +1,40 @@
 <div class="example-container mat-elevation-z8">
 
-  <md-table #table [dataSource]="dataSource">
+
+  <md-table #table [dataSource]="dataSource" class="example-table"
+            mdSort mdSortActive="created" mdSortDisableClear mdSortDirection="asc">
 
     <!--- Note that these columns can be defined in any order.
           The actual rendered columns are set as a property on the row definition" -->
 
-    <!-- ID Column -->
-    <ng-container cdkColumnDef="userId">
-      <md-header-cell *cdkHeaderCellDef> ID </md-header-cell>
-      <md-cell *cdkCellDef="let row"> {{row.id}} </md-cell>
+    <!-- Number Column -->
+    <ng-container cdkColumnDef="number">
+      <md-header-cell *cdkHeaderCellDef> Number </md-header-cell>
+      <md-cell *cdkCellDef="let row"> {{row.number}} </md-cell>
     </ng-container>
 
-    <!-- Progress Column -->
-    <ng-container cdkColumnDef="progress">
-      <md-header-cell *cdkHeaderCellDef> Progress </md-header-cell>
-      <md-cell *cdkCellDef="let row"> {{row.progress}}% </md-cell>
+    <!-- Title Column -->
+    <ng-container cdkColumnDef="title">
+      <md-header-cell *cdkHeaderCellDef> Title </md-header-cell>
+      <md-cell *cdkCellDef="let row"> {{row.title}} </md-cell>
     </ng-container>
 
-    <!-- Name Column -->
-    <ng-container cdkColumnDef="userName">
-      <md-header-cell *cdkHeaderCellDef> Name </md-header-cell>
-      <md-cell *cdkCellDef="let row"> {{row.name}} </md-cell>
+    <!-- State Column -->
+    <ng-container cdkColumnDef="state">
+      <md-header-cell *cdkHeaderCellDef> State </md-header-cell>
+      <md-cell *cdkCellDef="let row"> {{row.state}} </md-cell>
     </ng-container>
 
-    <!-- Color Column -->
-    <ng-container cdkColumnDef="color">
-      <md-header-cell *cdkHeaderCellDef> Color </md-header-cell>
-      <md-cell *cdkCellDef="let row" [style.color]="row.color"> {{row.color}} </md-cell>
+    <!-- Created Column -->
+    <ng-container cdkColumnDef="created">
+      <md-header-cell *cdkHeaderCellDef md-sort-header disableClear="true"> Created </md-header-cell>
+      <md-cell *cdkCellDef="let row"> {{row.created.toDateString()}} </md-cell>
     </ng-container>
 
     <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
     <md-row *cdkRowDef="let row; columns: displayedColumns;"></md-row>
-  </md-table>
-
-  <md-paginator #paginator
-                [length]="exampleDatabase.data.length"
-                [pageIndex]="0"
-                [pageSize]="25"
-                [pageSizeOptions]="[5, 10, 20, 50]">
+  </md-table> 
+  <md-paginator [length]="dataSource.resultsLength"
+                [pageSize]="30">
   </md-paginator>
 </div>
-
-
-<!-- 
-<p *ngIf="!applications"><em>Loading...</em></p>
-
-<table class='table table-striped' *ngIf="applications">
-    <thead>
-        <tr>
-            <th>№ Заявки</th>
-            <th>Адрес</th>
-            <th>Округ</th>
-            <th>Статус</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let application of applications">
-            <td>{{ application.applicationId }}</td>
-            <td>{{ application.address }}</td>
-            <td>{{ application.district.districtName }}</td>
-            <td>{{ application.applicationStatus.statusName }}</td>
-        </tr>
-    </tbody>
-</table> -->
- <!-- <ngb-pagination [(collectionSize)]="count" [(page)]="page" (pageChange)="loadPage($event)" [(pageSize)]="itemsPerPage" [maxSize]="7" [rotate]="true"></ngb-pagination>  -->
-<!-- <ngb-pagination [collectionSize]="applications" [pageSize]="itemsPerPage" [(page)]="page" [maxSize]="7" [rotate]="true" (pageChange)="loadPage($event)"></ngb-pagination> -->
