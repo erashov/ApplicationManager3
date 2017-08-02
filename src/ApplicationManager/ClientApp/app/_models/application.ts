@@ -8,12 +8,11 @@ export class Application {
     applicationStatusId: number;
     district: district;
     applicationStatus: applicationStatus;
-    /**
-     *
-     */
+   // districtName:string;
+   // statusName:string;
     constructor() {
        // super();
-        console.log(this.address);
+       // console.log(this.address);
         
     }
     /**

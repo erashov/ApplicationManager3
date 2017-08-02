@@ -1,115 +1,124 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, Inject } from '@angular/core';
 import { DataSource } from '@angular/cdk';
-import { MdPaginator } from '@angular/material';
+import { MdPaginator, MdSort } from '@angular/material';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { ApplicationService } from "../_services/application.service"
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/map';
+import { ApplicationService } from "../_services/application.service";
 import { Application } from "../_models/index";
 import { PagingList } from "../_models/pagingList";
 import { Subscriber } from "rxjs/Subscriber";
+import { Http, Response } from '@angular/http';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/interval';
+import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'applications',
-  templateUrl: 'applications.component.html', styleUrls:["./applications.component.scss"], providers: [ApplicationService]
+  templateUrl: 'applications.component.html', styleUrls: ["./applications.component.scss"],// providers: [ApplicationService]
 })
-export class ApplicationsComponent implements OnInit {
-  displayedColumns = ['applicationId', 'address', 'districtName', 'statusName'];
-  dataChange: BehaviorSubject<Application[]> = new BehaviorSubject<Application[]>([]);
+export class ApplicationsComponent {
+  displayedColumns = ['applicationId', 'address'];
+  exampleDatabase: ExampleHttpDao | null;
   dataSource: ExampleDataSource | null;
-  public count: number=0;
-  public _paginator: Paginator;
-
-
   @ViewChild(MdPaginator) paginator: MdPaginator;
+  @ViewChild(MdSort) sort: MdSort;
 
-  constructor(private appserv: ApplicationService) {
-
+  constructor(http: Http, @Inject("ORIGIN_URL") originUrl: string) {
+    this.exampleDatabase = new ExampleHttpDao(http, originUrl);
   }
 
   ngOnInit() {
-    console.log(1);
-   this._paginator = new Paginator(this.appserv, this.paginator.pageIndex, 10);
-
-    this.dataSource = new ExampleDataSource(this.dataChange, this.paginator, this._paginator, this.appserv);
-
-    console.log(this.dataSource);
+    this.dataSource = new ExampleDataSource(this.exampleDatabase!,
+      this.sort, this.paginator);
+      console.log(this.dataSource);
+      
 
   }
+}
+/** An example database that the data source uses to retrieve data for the table. */
+export class ExampleHttpDao {
+  url: string;
+  count:number
+  constructor(private http: Http, originUrl: string) {
+    this.url = originUrl;
+  }
 
+  getRepoIssues(sort: string, order: string, page: number): Observable<Response> {
+    const requestUrl =
+      `${this.url}/api/Application/get?sort=${sort}&order=${order}&page=${page+1}&pageSize=10`;
 
+    return this.http.get(requestUrl);
+  }
 }
 
-export class ExampleDataSource extends DataSource<any> {
-  /*   // dataChange: BehaviorSubject<Application[]> = new BehaviorSubject<Application[]>([]);
-    // applications: Application[];
-    constructor(private dataChange: BehaviorSubject<Application[]>, private _paginator: MdPaginator) {
-      super();
-      // this.dataChange.next(applications);
-    }
-  
-    connect(): Observable<Application[]> {
-      return Observable.create((observer: Subscriber<any>) => {
-        observer.next(this.dataChange);
-        observer.complete();
-      });//Observable.of(this.records);
-    }
-    disconnect() { } */
-  constructor(private dataChange: BehaviorSubject<Application[]>, private _paginator: MdPaginator, private pagin: Paginator, private appserv: ApplicationService) {
+export class ExampleDataSource extends DataSource<Application> {
+  // The number of issues returned by github matching the query.
+  resultsLength: number = 0;
+  isLoadingResults: boolean;
+  isRateLimitReached: boolean;
 
+  constructor(private _exampleDatabase: ExampleHttpDao,
+    private _sort: MdSort,
+    private _paginator: MdPaginator) {
     super();
- //this.pagin = new Paginator(this.appserv, this._paginator.pageIndex, this._paginator.pageSize);
   }
 
-
-  /** Connect function called by the table to retrieve one stream containing the data to render. */
   connect(): Observable<Application[]> {
-           console.log(1.1);
-  // this.pagin = new Paginator(this.appserv, this._paginator.pageIndex, 10)
-    //console.log(this._paginator.applications);
-
-    this.dataChange.next(this.pagin.applications);
 
     const displayDataChanges = [
-        
-      //this.dataChange,
+      this._sort.mdSortChange,
       this._paginator.page,
     ];
 
-    return Observable.merge(...displayDataChanges).map(() => {
-      console.log(2);
-            this.pagin = new Paginator(this.appserv, this._paginator.pageIndex, this._paginator.pageSize)
-      const data = this.pagin.applications;
+    this._sort.mdSortChange.subscribe(() => {
+      this._paginator.pageIndex = 0;
+    })
 
-      return data;
-    });
+    return Observable.merge(...displayDataChanges)
+      .startWith(null)
+      .switchMap(() => {
+        this.isLoadingResults = true;
+
+        return this._exampleDatabase.getRepoIssues(
+          this._sort.active, this._sort.direction, this._paginator.pageIndex);
+      })
+      .catch(() => {
+        this.isRateLimitReached = true;
+        return Observable.of(null);
+      })
+      .map(result => {
+
+        this.isLoadingResults = false;
+        return result;
+      })
+      .map(result => {
+        if (!result) { return []; }
+        this.isRateLimitReached = false;
+        this.resultsLength = result.json().total_count;
+
+        return this.readGithubResult(result);
+      });
+
+
   }
 
   disconnect() { }
 
-}
-export class Paginator {
-  public count: number;
-  public applications: Application[] = [];
-  constructor(private appserv: ApplicationService, pageIndex: number, pageSize: number) {
-    this.getData(pageIndex, pageSize);
-  }
+  private readGithubResult(result: Response): Application[] {
 
-  private getData(pageIndex: number, pageSize: number) {
-
-    return this.appserv.getListPage(pageIndex + 1, pageSize)
-      .subscribe((data) => {
-        this.count = data.count,
-          data.records.forEach(element => {
-            this.applications.push(element);
-          });
-        console.log(3);
-      },
-      err => {
-        console.log(err);
-      });
-
+    return result.json().items.map(app => {
+     
+      return {
+        applicationId: app.applicationId,
+        address: app.address,
+     //   districtName: app.district.districtName,
+        //statusName: app.applicationStatus.statusName
+      };
+    });
   }
 }

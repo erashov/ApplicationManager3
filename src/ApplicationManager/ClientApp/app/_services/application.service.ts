@@ -36,5 +36,13 @@ export class ApplicationService {
             .catch(err => Observable.throw(err));
     }
 
+    getApplications(sort: string, order: string, page: number): Observable<Response> {
+        //const href = 'https://api.github.com/search/issues';
+        const requestUrl =
+            `${this.url}/api/Application/getpage?sort=${sort}&order=${order}&page=${page + 1}`;
+
+        return this.http.get(requestUrl);
+    }
+
 
 }
