@@ -45,7 +45,7 @@ export class ExampleHttpDao {
 
 export class ExampleDataSource extends DataSource<Application> {
   // The number of issues returned by github matching the query.
-  resultsLength = 0;
+  resultsLength = 55;
   isLoadingResults = false;
   isRateLimitReached = false;
 
