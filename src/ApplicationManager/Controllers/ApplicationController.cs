@@ -30,12 +30,20 @@ namespace ApplicationManager.Controllers
         [Route("get")]
         public async Task<PagingModelView<ApplicationEntiry>> Get(int page, int pageSize, string sort, string order)
         {
-            var t1 = Task.Run(() => _application.FindPage(page, pageSize));
+            var t1 = Task.Run(() => _application.FindPage(page+1, pageSize));
             var t2 = Task.Run(() => _application.Find().Count());
 
             await Task.WhenAll(t1, t2);
-            return new PagingModelView<ApplicationEntiry>() { Items=t1.Result, Total_Count=t2.Result};
+            return new PagingModelView<ApplicationEntiry>() { Items = t1.Result, Total_Count = t2.Result };
         }
+
+        //[HttpGet]
+        //[Route("get")]
+        //public PagingModelView<ApplicationEntiry> Get(int page, int pageSize, string sort, string order)
+        //{
+
+        //    return new PagingModelView<ApplicationEntiry>() { Items = _application.FindPage(page, pageSize), Total_Count = _application.Find().Count() };
+        //}
 
         [HttpGet]
         [Route("getpage")]

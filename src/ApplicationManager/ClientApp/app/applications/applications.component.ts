@@ -1,124 +1,91 @@
-import { Component, ViewChild, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Http } from '@angular/http';
 import { DataSource } from '@angular/cdk';
 import { MdPaginator, MdSort } from '@angular/material';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { ApplicationService } from "../_services/application.service";
-import { Application } from "../_models/index";
-import { PagingList } from "../_models/pagingList";
-import { Subscriber } from "rxjs/Subscriber";
-import { Http, Response } from '@angular/http';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/interval';
+import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/switchMap';
+import { PagingList, Application } from "../_models/index";
 
 @Component({
   selector: 'applications',
   templateUrl: 'applications.component.html', styleUrls: ["./applications.component.scss"],// providers: [ApplicationService]
 })
-export class ApplicationsComponent {
+export class ApplicationsComponent implements OnInit {
   displayedColumns = ['applicationId', 'address'];
   exampleDatabase: ExampleHttpDao | null;
   dataSource: ExampleDataSource | null;
+
   @ViewChild(MdPaginator) paginator: MdPaginator;
   @ViewChild(MdSort) sort: MdSort;
 
-  constructor(http: Http, @Inject("ORIGIN_URL") originUrl: string) {
-    this.exampleDatabase = new ExampleHttpDao(http, originUrl);
+  constructor(private http: Http, @Inject("ORIGIN_URL") private originUrl: string) {
+    this.exampleDatabase = new ExampleHttpDao(this.http, this.originUrl);
   }
 
   ngOnInit() {
-    this.dataSource = new ExampleDataSource(this.exampleDatabase!,
-      this.sort, this.paginator);
-      console.log(this.dataSource);
-      
-
+    this.exampleDatabase = new ExampleHttpDao(this.http, this.originUrl);
+    this.dataSource = new ExampleDataSource(this.exampleDatabase!, this.paginator, this.sort);
   }
 }
 /** An example database that the data source uses to retrieve data for the table. */
 export class ExampleHttpDao {
-  url: string;
-  count:number
-  constructor(private http: Http, originUrl: string) {
-    this.url = originUrl;
-  }
+  constructor(private http: Http, private originUrl: string) { }
 
-  getRepoIssues(sort: string, order: string, page: number): Observable<Response> {
+  getRepoIssues(sort: string, order: string, page: number): Observable<PagingList> {
     const requestUrl =
-      `${this.url}/api/Application/get?sort=${sort}&order=${order}&page=${page+1}&pageSize=10`;
-
-    return this.http.get(requestUrl);
+      `${this.originUrl}/api/Application/get?sort=${sort}&order=${order}&page=${page}&pageSize=10`;
+    return this.http.get(requestUrl).map(response => response.json() as PagingList);
   }
 }
 
 export class ExampleDataSource extends DataSource<Application> {
   // The number of issues returned by github matching the query.
-  resultsLength: number = 0;
-  isLoadingResults: boolean;
-  isRateLimitReached: boolean;
+  resultsLength = 0;
+  isLoadingResults = false;
+  isRateLimitReached = false;
 
-  constructor(private _exampleDatabase: ExampleHttpDao,
-    private _sort: MdSort,
-    private _paginator: MdPaginator) {
+  constructor(private exampleDatabase: ExampleHttpDao,
+    private paginator: MdPaginator,
+    private sort: MdSort) {
     super();
   }
 
+  /** Connect function called by the table to retrieve one stream containing the data to render. */
   connect(): Observable<Application[]> {
-
     const displayDataChanges = [
-      this._sort.mdSortChange,
-      this._paginator.page,
+      this.sort.mdSortChange,
+      this.paginator.page
     ];
 
-    this._sort.mdSortChange.subscribe(() => {
-      this._paginator.pageIndex = 0;
-    })
+    // If the user changes the sort order, reset back to the first page.
+    this.sort.mdSortChange.subscribe(() => this.paginator.pageIndex = 0);
 
     return Observable.merge(...displayDataChanges)
       .startWith(null)
       .switchMap(() => {
         this.isLoadingResults = true;
-
-        return this._exampleDatabase.getRepoIssues(
-          this._sort.active, this._sort.direction, this._paginator.pageIndex);
+        return this.exampleDatabase.getRepoIssues(
+          this.sort.active, this.sort.direction, this.paginator.pageIndex);
+      })
+      .map(data => {
+        // Flip flag to show that loading has finished.
+        this.isLoadingResults = false;
+        this.isRateLimitReached = false;
+        this.resultsLength = data.total_Count;
+        return data.items;
       })
       .catch(() => {
+        this.isLoadingResults = false;
+        // Catch if the GitHub API has reached its rate limit. Return empty data.
         this.isRateLimitReached = true;
         return Observable.of(null);
-      })
-      .map(result => {
-
-        this.isLoadingResults = false;
-        return result;
-      })
-      .map(result => {
-        if (!result) { return []; }
-        this.isRateLimitReached = false;
-        this.resultsLength = result.json().total_count;
-
-        return this.readGithubResult(result);
       });
-
-
   }
 
   disconnect() { }
-
-  private readGithubResult(result: Response): Application[] {
-
-    return result.json().items.map(app => {
-     
-      return {
-        applicationId: app.applicationId,
-        address: app.address,
-     //   districtName: app.district.districtName,
-        //statusName: app.applicationStatus.statusName
-      };
-    });
-  }
 }

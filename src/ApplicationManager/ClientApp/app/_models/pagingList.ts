@@ -1,15 +1,8 @@
 import { Application } from "./index";
 
-export class PagingList {
+export interface PagingList {
    
-   public records: Application[];
-   public count: number;
-    constructor(count:number, records:Application[]){
-      // console.log(records);
-        
-        this.count=count;  
-        this.records=records;
-       // console.log(this.records.length);
-        
-    }
+    items: Application[];
+    total_Count: number;
+
 }

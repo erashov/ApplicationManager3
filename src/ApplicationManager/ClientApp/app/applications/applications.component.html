@@ -1,33 +1,40 @@
-<md-table #table [dataSource]="dataSource" class="example-table" mdSort mdSortActive="applicationId" mdSortDisableClear mdSortDirection="asc">
+<div class="example-container mat-elevation-z8">
+  <div class="example-loading-shade" *ngIf="dataSource.isLoadingResults || dataSource.isRateLimitReached">
+    <md-spinner *ngIf="dataSource.isLoadingResults"></md-spinner>
+    <div class="example-rate-limit-reached" *ngIf="dataSource.isRateLimitReached">
+      GitHub's API rate limit has been reached. It will be reset in one minute.
+    </div>
+  </div>
+  <md-table #table [dataSource]="dataSource" class="example-table" >
 
-  <!--- Note that these columns can be defined in any order.
+    <!--- Note that these columns can be defined in any order.
           The actual rendered columns are set as a property on the row definition" -->
 
-  <!-- Number Column -->
-  <ng-container cdkColumnDef="applicationId">
-    <md-header-cell *cdkHeaderCellDef md-sort-header disableClear="true"> applicationId </md-header-cell>
-    <md-cell *cdkCellDef="let row"> {{row.applicationId}} </md-cell>
-  </ng-container>
+    <!-- Number Column -->
+    <ng-container cdkColumnDef="applicationId">
+      <md-header-cell *cdkHeaderCellDef md-sort-header disableClear="true"> applicationId </md-header-cell>
+      <md-cell *cdkCellDef="let row"> {{row.applicationId}} </md-cell>
+    </ng-container>
 
-  <!-- Title Column -->
-  <ng-container cdkColumnDef="address">
-    <md-header-cell *cdkHeaderCellDef> address </md-header-cell>
-    <md-cell *cdkCellDef="let row"> {{row.address}} </md-cell>
-  </ng-container>
+    <!-- Title Column -->
+    <ng-container cdkColumnDef="address">
+      <md-header-cell *cdkHeaderCellDef> address </md-header-cell>
+      <md-cell *cdkCellDef="let row"> {{row.address}} </md-cell>
+    </ng-container>
 
-  <!--   
+    <!--   
     <ng-container cdkColumnDef="districtName">
       <md-header-cell *cdkHeaderCellDef> districtName </md-header-cell>
       <md-cell *cdkCellDef="let row"> {{row.district.districtName}} </md-cell>
     </ng-container>
-
     <ng-container cdkColumnDef="statusName">
       <md-header-cell *cdkHeaderCellDef md-sort-header disableClear="true"> statusName </md-header-cell>
       <md-cell *cdkCellDef="let row"> {{row.applicationStatus.statusName}} </md-cell>
     </ng-container>
  -->
-  <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
-  <md-row *cdkRowDef="let row; columns: displayedColumns;"></md-row>
-</md-table>
-<md-paginator [length]="dataSource.resultsLength" [pageSize]="10">
-</md-paginator>
+    <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
+    <md-row *cdkRowDef="let row; columns: displayedColumns;"></md-row>
+  </md-table>
+  <md-paginator [length]="dataSource.resultsLength" [pageSize]="10">
+  </md-paginator>
+</div>

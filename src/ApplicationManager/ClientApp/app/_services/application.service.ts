@@ -14,9 +14,7 @@ export class ApplicationService {
         this.url = originUrl;
     }
     getListPage(page: number, amount: number): Observable<PagingList> {
-        return this.http.get(this.url + '/api/Application/getpage?page=' + page + '&pageSize=' + amount)
-            .map((response: Response) => response.json())
-            .map(({ count, records }) => new PagingList(count, records));
+        return this.http.get(this.url + '/api/Application/getpage?page=' + page + '&pageSize=' + amount).map(response => response.json() as PagingList);
     }
 
     getList(page: number, amount: number): Observable<Application[]> {
