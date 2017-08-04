@@ -24,7 +24,7 @@ export class ApplicationsComponent implements OnInit {
   @ViewChild(MdSort) sort: MdSort;
 
   constructor(private http: Http, @Inject("ORIGIN_URL") private originUrl: string) {
-    this.exampleDatabase = new ExampleHttpDao(this.http, this.originUrl);
+   // this.exampleDatabase = new ExampleHttpDao(this.http, this.originUrl);
   }
 
   ngOnInit() {
@@ -36,9 +36,9 @@ export class ApplicationsComponent implements OnInit {
 export class ExampleHttpDao {
   constructor(private http: Http, private originUrl: string) { }
 
-  getRepoIssues(sort: string, order: string, page: number): Observable<PagingList> {
+  getRepoIssues(sort: string, order: string, page: number,pageSize:number): Observable<PagingList> {
     const requestUrl =
-      `${this.originUrl}/api/Application/get?sort=${sort}&order=${order}&page=${page}&pageSize=10`;
+      `${this.originUrl}/api/Application/get?sort=${sort}&order=${order}&page=${page}&pageSize=${pageSize}`;
     return this.http.get(requestUrl).map(response => response.json() as PagingList);
   }
 }
@@ -70,7 +70,7 @@ export class ExampleDataSource extends DataSource<Application> {
       .switchMap(() => {
         this.isLoadingResults = true;
         return this.exampleDatabase.getRepoIssues(
-          this.sort.active, this.sort.direction, this.paginator.pageIndex);
+          this.sort.active, this.sort.direction, this.paginator.pageIndex,this.paginator.pageSize);
       })
       .map(data => {
         // Flip flag to show that loading has finished.
