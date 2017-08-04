@@ -24,7 +24,6 @@ export class ApplicationsComponent implements OnInit {
   @ViewChild(MdSort) sort: MdSort;
 
   constructor(private http: Http, @Inject("ORIGIN_URL") private originUrl: string) {
-   // this.exampleDatabase = new ExampleHttpDao(this.http, this.originUrl);
   }
 
   ngOnInit() {
@@ -45,9 +44,9 @@ export class ExampleHttpDao {
 
 export class ExampleDataSource extends DataSource<Application> {
   // The number of issues returned by github matching the query.
-  resultsLength = 55;
+  resultsLength = 0;
   isLoadingResults = false;
-  isRateLimitReached = false;
+  //isRateLimitReached = false;
 
   constructor(private exampleDatabase: ExampleHttpDao,
     private paginator: MdPaginator,
@@ -75,14 +74,14 @@ export class ExampleDataSource extends DataSource<Application> {
       .map(data => {
         // Flip flag to show that loading has finished.
         this.isLoadingResults = false;
-        this.isRateLimitReached = false;
+       // this.isRateLimitReached = false;
         this.resultsLength = data.total_Count;
         return data.items;
       })
       .catch(() => {
         this.isLoadingResults = false;
         // Catch if the GitHub API has reached its rate limit. Return empty data.
-        this.isRateLimitReached = true;
+       // this.isRateLimitReached = true;
         return Observable.of(null);
       });
   }

@@ -1,16 +1,6 @@
-<div class="example-container mat-elevation-z8">
-<!--   <div class="example-loading-shade" *ngIf="dataSource.isLoadingResults || dataSource.isRateLimitReached">
-    <md-spinner *ngIf="dataSource.isLoadingResults"></md-spinner>
-    <div class="example-rate-limit-reached" *ngIf="dataSource.isRateLimitReached">
-      GitHub's API rate limit has been reached. It will be reset in one minute.
-    </div>
-  </div> -->
+
   <md-table #table [dataSource]="dataSource" class="example-table" mdSort mdSortActive="applicationId" mdSortDisableClear mdSortDirection="asc">
 
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
-
-    <!-- Number Column -->
     <ng-container cdkColumnDef="applicationId">
       <md-header-cell *cdkHeaderCellDef md-sort-header disableClear="true"> applicationId </md-header-cell>
       <md-cell *cdkCellDef="let row"> {{row.applicationId}} </md-cell>
@@ -37,4 +27,3 @@
   </md-table>
   <md-paginator [length]="dataSource.resultsLength" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
   </md-paginator>
-</div>
