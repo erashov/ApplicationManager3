@@ -3,8 +3,8 @@ import "zone.js";
 import { enableProdMode } from "@angular/core";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { AppModule } from "./app/app.module.client";
-//import './app/polyfills';
-
+//import './polyfills';
+//import 'babel-polyfill';
 if (module['hot']) {
     module['hot'].accept();
     module['hot'].dispose(() => {
